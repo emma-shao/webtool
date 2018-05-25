@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>时长累计器</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script>
+      window.onload = function() {
+        var oSum = document.getElementById('sum');
+        oSum.onclick = function(e) {
+          e.preventDefault();
+          var str = document.getElementById('interval').value;
+          var aInterval = str.match(/\s*?(\d+:\d+:\d+)\s*?/g);
+          var sum = {
+            days: 0,
+            hours: 0,
+            minutes: 0,
+            seconds: 0,
+          };
+          for(var i=0; i<aInterval.length; i++) {
+            split = aInterval[i].split(':');
+            sum.hours += parseInt(split[0]);
+            sum.minutes += parseInt(split[1]);
+            sum.seconds += parseInt(split[2]);
+          }
+          if (sum.seconds > 59) {
+            sum.minutes += Math.floor(sum.seconds / 60);
+            sum.seconds = sum.seconds % 60;
+          }
+          if (sum.minutes > 60) {
+            sum.hours += Math.floor(sum.minutes / 60);
+            sum.minutes = sum.minutes % 60;
+          }
+          if (sum.hours > 24) {
+            sum.days += Math.floor(sum.hours / 24);
+            sum.hours = sum.hours % 24;
+          }
+          var result = sum.days + '天' + sum.hours + '小时' + sum.minutes + '分' + sum.seconds + '秒';
+          $('#result').html(result);
+          return false;
+        }
+      }
+    </script>
+</head>
+<body>
+  <div class="content">
+    <div class="card col-md-3">
+      <div class="card-header">
+        总计时长：<span id="result"></span>
+      </div>
+      <div class="card-body">
+      <form action="">
+        <div class="from-group">
+          <label for="interval">输入时长间隔：</label>
+          <textarea name="interval" id="interval" class="form-control" rows="15" placeholder="00:00:00的格式，换行输入下一个"></textarea>
+        </div>
+        <button type="button" class="btn btn-primary" id="sum">累加</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <script src="js/jquery.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+</body>
+</html>
